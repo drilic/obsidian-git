@@ -1,5 +1,10 @@
 import type { LineAuthorSettings } from "src/editor/lineAuthor/model";
 
+export interface SyncRoot {
+    path: string;
+    label: string;
+}
+
 export interface ObsidianGitSettings {
     commitMessage: string;
     autoCommitMessage: string;
@@ -71,6 +76,7 @@ export interface ObsidianGitSettings {
         showSigns: boolean;
         statusBar: "disabled" | "colored" | "monochrome";
     };
+    syncRoots: SyncRoot[];
 }
 
 /**

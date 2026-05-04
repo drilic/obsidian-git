@@ -165,7 +165,15 @@ export default class AutomaticsManager {
                         }
                     }
                 }
-                const onlyStaged = this.plugin.settings.autoCommitOnlyStaged;
+                const syncRoots = this.plugin.settings.syncRoots;
+                if (syncRoots.length > 0) {
+                    for (const root of syncRoots) {
+                        if (root.path) {
+                            await this.plugin.gitManager.stageAll({ dir: root.path });
+                        }
+                    }
+                }
+                const onlyStaged = syncRoots.length > 0 || this.plugin.settings.autoCommitOnlyStaged;
                 if (this.plugin.settings.differentIntervalCommitAndPush) {
                     await this.plugin.commit({ fromAuto: true, onlyStaged });
                 } else {

@@ -447,6 +447,24 @@ export function addCommmands(plugin: ObsidianGit) {
     });
 
     plugin.addCommand({
+        id: "commit-sync-vault-roots",
+        name: "Commit-and-sync vault roots",
+        checkCallback: (checking) => {
+            if (checking) {
+                return plugin.settings.syncRoots.length > 0;
+            }
+            plugin.promiseQueue.addTask(async () => {
+                for (const root of plugin.settings.syncRoots) {
+                    if (root.path) {
+                        await plugin.gitManager.stageAll({ dir: root.path });
+                    }
+                }
+                await plugin.commitAndSync({ fromAutoBackup: false });
+            });
+        },
+    });
+
+    plugin.addCommand({
         id: "pause-automatic-routines",
         name: "Pause/Resume automatic routines",
         callback: () => {

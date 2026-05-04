@@ -282,6 +282,28 @@ export class ObsidianGitSettingsTab extends PluginSettingTab {
                 plugin.settings.customMessageOnAutoBackup
             );
 
+            new Setting(containerEl).setName("Vault roots").setHeading();
+
+            new Setting(containerEl)
+                .setName("Vault roots")
+                .setDesc(
+                    "Folders to stage on auto commit-and-sync. Only files within these paths are staged automatically. Leave empty to stage all changes."
+                );
+
+            const syncRootsContainer = containerEl.createDiv();
+            this.renderSyncRootsRows(syncRootsContainer, plugin);
+
+            new Setting(containerEl).addButton((btn) =>
+                btn
+                    .setButtonText("Add vault root")
+                    .setCta()
+                    .onClick(async () => {
+                        plugin.settings.syncRoots.push({ path: "", label: "" });
+                        await plugin.saveSettings();
+                        this.refreshDisplayWithDelay();
+                    })
+            );
+
             new Setting(containerEl).setName("Commit message").setHeading();
 
             const manualCommitMessageSetting = new Setting(containerEl)
@@ -1040,6 +1062,42 @@ export class ObsidianGitSettingsTab extends PluginSettingTab {
             } else {
                 keys.createEl("kbd", { text: "CTRL + SHIFT + I" });
             }
+        }
+    }
+
+    private renderSyncRootsRows(container: HTMLElement, plugin: ObsidianGit): void {
+        container.empty();
+        for (let i = 0; i < plugin.settings.syncRoots.length; i++) {
+            const root = plugin.settings.syncRoots[i];
+            new Setting(container)
+                .addText((text) =>
+                    text
+                        .setPlaceholder("Label (e.g. Personal notes)")
+                        .setValue(root.label)
+                        .onChange(async (value) => {
+                            plugin.settings.syncRoots[i].label = value;
+                            await plugin.saveSettings();
+                        })
+                )
+                .addText((text) =>
+                    text
+                        .setPlaceholder("Path (e.g. brain)")
+                        .setValue(root.path)
+                        .onChange(async (value) => {
+                            plugin.settings.syncRoots[i].path = value;
+                            await plugin.saveSettings();
+                        })
+                )
+                .addExtraButton((btn) =>
+                    btn
+                        .setIcon("trash")
+                        .setTooltip("Remove")
+                        .onClick(async () => {
+                            plugin.settings.syncRoots.splice(i, 1);
+                            await plugin.saveSettings();
+                            this.refreshDisplayWithDelay();
+                        })
+                );
         }
     }
 

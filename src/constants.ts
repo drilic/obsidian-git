@@ -50,6 +50,7 @@ export const DEFAULT_SETTINGS: ObsidianGitSettings = {
         hunkCommands: false,
         statusBar: "disabled",
     },
+    syncRoots: [],
     lineAuthor: {
         show: false,
         followMovement: "inactive",
