@@ -36,11 +36,33 @@ Resolve any conflicts if they appear (unlikely since vault roots touches isolate
 git push origin feature/vault-separation --force-with-lease
 ```
 
-**Step 4 — Tag a new release from your feature branch**
+**Step 4 — Bump `manifest.json` version to match the tag**
 
-Use a version that combines the upstream version + your fork revision:
+BRAT compares the installed version (read from `manifest.json`) to the release tag. They must match exactly.
+
+Edit `manifest.json`:
+```json
+"version": "2.39.0-vault-separation-0.0.1"
+```
+
+Commit the change:
 ```bash
-git tag 2.39.0-fork.1   # upstream version + fork suffix
+git add manifest.json
+git commit -m "chore: bump manifest to 2.39.0-vault-separation-0.0.1"
+```
+
+**Step 5 — Tag the new commit and push**
+
+```bash
+git tag 2.39.0-vault-separation-0.0.1
+git push origin feature/vault-separation --tags
+```
+
+If you need to redo a tag (e.g. manifest was wrong), move it to the new commit:
+```bash
+git tag -d 2.39.0-vault-separation-0.0.1          # delete locally
+git push origin :refs/tags/2.39.0-vault-separation-0.0.1  # delete remotely
+git tag 2.39.0-vault-separation-0.0.1              # recreate on current commit
 git push origin feature/vault-separation --tags
 ```
 
