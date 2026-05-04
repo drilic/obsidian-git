@@ -1065,7 +1065,10 @@ export class ObsidianGitSettingsTab extends PluginSettingTab {
         }
     }
 
-    private renderSyncRootsRows(container: HTMLElement, plugin: ObsidianGit): void {
+    private renderSyncRootsRows(
+        container: HTMLElement,
+        plugin: ObsidianGit
+    ): void {
         container.empty();
         for (let i = 0; i < plugin.settings.syncRoots.length; i++) {
             const root = plugin.settings.syncRoots[i];

@@ -169,11 +169,15 @@ export default class AutomaticsManager {
                 if (syncRoots.length > 0) {
                     for (const root of syncRoots) {
                         if (root.path) {
-                            await this.plugin.gitManager.stageAll({ dir: root.path });
+                            await this.plugin.gitManager.stageAll({
+                                dir: root.path,
+                            });
                         }
                     }
                 }
-                const onlyStaged = syncRoots.length > 0 || this.plugin.settings.autoCommitOnlyStaged;
+                const onlyStaged =
+                    syncRoots.length > 0 ||
+                    this.plugin.settings.autoCommitOnlyStaged;
                 if (this.plugin.settings.differentIntervalCommitAndPush) {
                     await this.plugin.commit({ fromAuto: true, onlyStaged });
                 } else {
